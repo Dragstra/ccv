@@ -4,25 +4,37 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <form>
-                            <SelectTree :options="options" v-model="value" @input="getProducts(value)">
-                            </SelectTree>
-                            <ul class="mb-4 pl-3" v-if="products.items[0]">
-                                    <input type="checkbox" name="product[]" id="9999">
-                                    <label for="9999">Alle producten in deze categorie.</label>
-                                <li v-for="product in products.items">
-                                    <input type="checkbox" name="product[]" :id="product.id">
-                                    <label :for="product.id">{{ product.name }}</label>
-                                </li>
-                            </ul>
-                            <p class="mb-4 pl-3" v-else>Geen producten gevonden in de geselecteerde categorie.</p>
 
+                        <SelectTree :options="options" v-model="value" @input="getProducts(value)" />
+
+                        <ul class="mb-4 pl-3" v-if="products.items[0]">
+                            <input v-model="checked" type="checkbox" name="product[]" :id="value" :value="value">
+                            <label for="9999">Alle producten in deze categorie.</label>
+                            <li v-for="product in products.items">
+                                <input :disabled="checked.includes(value)"
+                                       name="checkboxes" v-model="checked" type="checkbox" :value="product.id"
+                                       :id="product.id">
+                                <label :for="product.id">{{ product.name }}</label>
+                            </li>
+                        </ul>
+
+                        <p class="mb-4 pl-3 text-gray-500" v-else>Geen producten gevonden in de geselecteerde
+                            categorie.</p>
+
+                        <div v-if="value && products.items[0] && checked.length" class="mt-3">
                             <label>
-                                <input type="text" class="w-full" placeholder="Naam van koppeling, 'Eindverbinding linkerkant' bijvoorbeeld" required>
+                                <input type="text" class="w-full hover:border hover:border-blue-600"
+                                       v-model="inputName"
+                                       placeholder="Naam van koppeling, 'Eindverbinding linkerkant' bijvoorbeeld"
+                                       required>
                             </label>
+                        </div>
+
+                        <div v-if="inputName" class="mt-3">
                             <SelectTree :options="options">
                             </SelectTree>
-                        </form>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -38,8 +50,10 @@ export default {
 
     data() {
         return {
-            value: '',
+            checked: [],
+            value: null,
             options: [],
+            inputName: null,
             category: null,
             products: {
                 items: []
@@ -55,6 +69,13 @@ export default {
                     console.log(this.products)
                 })
         },
+    },
+    watch: {
+        checked: function () {
+            if (this.checked.includes(this.value) && this.checked.length > 1) {
+                this.checked = [this.value]
+            }
+        }
     },
     mounted() {
         axios.get('/categories/tree')

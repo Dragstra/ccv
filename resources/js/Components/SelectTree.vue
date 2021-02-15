@@ -1,6 +1,6 @@
 <template>
     <div>
-        <treeselect :label="name"
+        <treeselect :label="name" class=" hover:border hover:border-blue-600"
                     noOptionsText="Er zijn geen categorieën"
                     placeholder="Kies een categorie" @input="changeCategory()"
                     noResultsText="Geen data beschikbaar" noChildrenText="Geen verdere categorieën"
@@ -32,7 +32,7 @@ export default {
 
     data() {
         return {
-            value: '',
+            value: null,
             name: '',
         }
     },

@@ -17,7 +17,13 @@ Route::middleware(['auth'])->group(
             function () {
                 return view('dashboard');
             }
-        )->middleware(['auth'])->name('dashboard');
+        )->name('dashboard');
+        Route::get(
+            '/',
+            function () {
+                return view('dashboard');
+            }
+        )->name('home');
     }
 );
 

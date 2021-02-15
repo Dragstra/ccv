@@ -4265,7 +4265,7 @@ __webpack_require__.r(__webpack_exports__);
   name: "SelectTree",
   data: function data() {
     return {
-      value: '',
+      value: null,
       name: ''
     };
   },
@@ -4333,6 +4333,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -4340,8 +4352,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      value: '',
+      checked: [],
+      value: null,
       options: [],
+      inputName: null,
       category: null,
       products: {
         items: []
@@ -4356,6 +4370,13 @@ __webpack_require__.r(__webpack_exports__);
         _this.products = response.data;
         console.log(_this.products);
       });
+    }
+  },
+  watch: {
+    checked: function checked() {
+      if (this.checked.includes(this.value) && this.checked.length > 1) {
+        this.checked = [this.value];
+      }
     }
   },
   mounted: function mounted() {
@@ -5906,6 +5927,7 @@ var render = function() {
     "div",
     [
       _c("treeselect", {
+        staticClass: " hover:border hover:border-blue-600",
         attrs: {
           label: _vm.name,
           noOptionsText: "Er zijn geen categorieën",
@@ -5961,97 +5983,189 @@ var render = function() {
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
         _c("div", { staticClass: "panel panel-default" }, [
-          _c("div", { staticClass: "panel-body" }, [
-            _c(
-              "form",
-              [
-                _c("SelectTree", {
-                  attrs: { options: _vm.options },
-                  on: {
-                    input: function($event) {
-                      return _vm.getProducts(_vm.value)
-                    }
-                  },
-                  model: {
-                    value: _vm.value,
-                    callback: function($$v) {
-                      _vm.value = $$v
-                    },
-                    expression: "value"
+          _c(
+            "div",
+            { staticClass: "panel-body" },
+            [
+              _c("SelectTree", {
+                attrs: { options: _vm.options },
+                on: {
+                  input: function($event) {
+                    return _vm.getProducts(_vm.value)
                   }
-                }),
-                _vm._v(" "),
-                _vm.products.items[0]
-                  ? _c(
-                      "ul",
-                      { staticClass: "mb-4 pl-3" },
-                      [
-                        _c("input", {
-                          attrs: {
-                            type: "checkbox",
-                            name: "product[]",
-                            id: "9999"
+                },
+                model: {
+                  value: _vm.value,
+                  callback: function($$v) {
+                    _vm.value = $$v
+                  },
+                  expression: "value"
+                }
+              }),
+              _vm._v(" "),
+              _vm.products.items[0]
+                ? _c(
+                    "ul",
+                    { staticClass: "mb-4 pl-3" },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.checked,
+                            expression: "checked"
                           }
-                        }),
-                        _vm._v(" "),
-                        _c("label", { attrs: { for: "9999" } }, [
-                          _vm._v("Alle producten in deze categorie.")
-                        ]),
-                        _vm._v(" "),
-                        _vm._l(_vm.products.items, function(product) {
-                          return _c("li", [
-                            _c("input", {
-                              attrs: {
-                                type: "checkbox",
-                                name: "product[]",
-                                id: product.id
+                        ],
+                        attrs: {
+                          type: "checkbox",
+                          name: "product[]",
+                          id: _vm.value
+                        },
+                        domProps: {
+                          value: _vm.value,
+                          checked: Array.isArray(_vm.checked)
+                            ? _vm._i(_vm.checked, _vm.value) > -1
+                            : _vm.checked
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.checked,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = _vm.value,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 && (_vm.checked = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.checked = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
                               }
-                            }),
-                            _vm._v(" "),
-                            _c("label", { attrs: { for: product.id } }, [
-                              _vm._v(_vm._s(product.name))
-                            ])
+                            } else {
+                              _vm.checked = $$c
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("label", { attrs: { for: "9999" } }, [
+                        _vm._v("Alle producten in deze categorie.")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.products.items, function(product) {
+                        return _c("li", [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.checked,
+                                expression: "checked"
+                              }
+                            ],
+                            attrs: {
+                              disabled: _vm.checked.includes(_vm.value),
+                              name: "checkboxes",
+                              type: "checkbox",
+                              id: product.id
+                            },
+                            domProps: {
+                              value: product.id,
+                              checked: Array.isArray(_vm.checked)
+                                ? _vm._i(_vm.checked, product.id) > -1
+                                : _vm.checked
+                            },
+                            on: {
+                              change: function($event) {
+                                var $$a = _vm.checked,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = product.id,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 && (_vm.checked = $$a.concat([$$v]))
+                                  } else {
+                                    $$i > -1 &&
+                                      (_vm.checked = $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1)))
+                                  }
+                                } else {
+                                  _vm.checked = $$c
+                                }
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("label", { attrs: { for: product.id } }, [
+                            _vm._v(_vm._s(product.name))
                           ])
-                        })
-                      ],
-                      2
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                : _c("p", { staticClass: "mb-4 pl-3 text-gray-500" }, [
+                    _vm._v(
+                      "Geen producten gevonden in de geselecteerde\n                        categorie."
                     )
-                  : _c("p", { staticClass: "mb-4 pl-3" }, [
-                      _vm._v(
-                        "Geen producten gevonden in de geselecteerde categorie."
-                      )
-                    ]),
-                _vm._v(" "),
-                _vm._m(0),
-                _vm._v(" "),
-                _c("SelectTree", { attrs: { options: _vm.options } })
-              ],
-              1
-            )
-          ])
+                  ]),
+              _vm._v(" "),
+              _vm.value && _vm.products.items[0] && _vm.checked.length
+                ? _c("div", { staticClass: "mt-3" }, [
+                    _c("label", [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.inputName,
+                            expression: "inputName"
+                          }
+                        ],
+                        staticClass:
+                          "w-full hover:border hover:border-blue-600",
+                        attrs: {
+                          type: "text",
+                          placeholder:
+                            "Naam van koppeling, 'Eindverbinding linkerkant' bijvoorbeeld",
+                          required: ""
+                        },
+                        domProps: { value: _vm.inputName },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.inputName = $event.target.value
+                          }
+                        }
+                      })
+                    ])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.inputName
+                ? _c(
+                    "div",
+                    { staticClass: "mt-3" },
+                    [_c("SelectTree", { attrs: { options: _vm.options } })],
+                    1
+                  )
+                : _vm._e()
+            ],
+            1
+          )
         ])
       ])
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _c("input", {
-        staticClass: "w-full",
-        attrs: {
-          type: "text",
-          placeholder:
-            "Naam van koppeling, 'Eindverbinding linkerkant' bijvoorbeeld",
-          required: ""
-        }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
