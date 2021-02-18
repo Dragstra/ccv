@@ -19,7 +19,7 @@ class Categories extends Connector implements CategoryInterface
 
     public function getCategories(?string $query = null): array
     {
-        return $this->get('categories')->json();
+        return $this->cache->getOrSet('getCategories', $this->get('categories')->json());
     }
 
     public function getCategory(int $category): array
@@ -38,8 +38,7 @@ class Categories extends Connector implements CategoryInterface
     public function getProducts(int $category): array
     {
 
-        return $this->get('categories/' . $category . '/products' )->json();
-        dd($this->cache->getOrSet('getProducts'.$category, $this->get('categories/' . $category . '/products' )->json()));
+        return $this->cache->getOrSet('getProducts'.$category, $this->get('categories/' . $category . '/products' )->json());
     }
 
     public function getTree(): array

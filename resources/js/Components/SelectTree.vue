@@ -38,7 +38,6 @@ export default {
     },
     methods: {
         changeCategory(){
-            console.log(this.value);
             this.$emit('input', this.value);
         },
         normalizer(node) {
@@ -50,7 +49,6 @@ export default {
         }
     },
     mounted () {
-        console.log(this.options)
     }
 }
 </script>

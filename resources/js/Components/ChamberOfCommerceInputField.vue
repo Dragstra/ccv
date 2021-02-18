@@ -12,7 +12,7 @@
                 @selected="onSelected"
                 name="company-name"
                 :get-suggestion-value="getSuggestionValue"
-                :input-props="{id:'autosuggest__input', class:'rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block mt-1 w-full'}">
+                :input-props="{id:'autosuggest__input', name:'company_name', class:'rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block mt-1 w-full'}">
                 <div slot-scope="{suggestion}">
                     <div style="{ display: 'flex', color: 'navyblue'}">{{ suggestion.item.handelsnaam }}</div>
                 </div>

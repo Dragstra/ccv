@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\ChamberOfCommerceController;
+use App\Http\Controllers\Configurator\ConfiguratorController;
 use App\Http\Controllers\Shop\CategoryController;
 use App\Http\Controllers\Shop\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -13,14 +14,13 @@ Route::middleware(['auth'])->group(
         Route::resource('products', ProductController::class)->only(['index', 'show']);
         Route::resource('categories', CategoryController::class)->only(['index', 'show']);
 
+        Route::resource('configurator', ConfiguratorController::class);
+
         Route::get('/dashboard', function () {
                 return view('dashboard');
-            })->name('dashboard');
-
-
-        Route::get('/', function () {
-                return view('dashboard');
             })->name('home');
+
+
     }
 );
 

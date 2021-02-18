@@ -3,23 +3,18 @@
 
 namespace App\Services\Shop\Ccvshop;
 
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Http;
+use Auth;
 
 class Connector
 {
-    private string $publicKey;
-    private string $privateKey;
     private string $versionUri;
-    private string $domain;
     private string $method;
     private string $timestamp;
 
 
     public function __construct()
     {
-        $this->publicKey = config('services.ccvshop.public_key');
-        $this->privateKey = config('services.ccvshop.secret_key');
         $this->versionUri = config('services.ccvshop.versionUri');
         $this->method = 'GET';
         $this->timestamp = date('c');
@@ -30,19 +25,20 @@ class Connector
     {
         $url = $this->versionUri . $parameter . $query;
 
-        $hash = hash_hmac('sha512', "$this->publicKey|GET|$url||$this->timestamp", $this->privateKey);
+        $hash = hash_hmac('sha512', $this->getUserDetail()."|GET|".$url."||".$this->timestamp , $this->getUserDetail('private_key'));
         return Http::withHeaders(
             [
                 'x-date' => $this->timestamp,
                 'x-hash' => $hash,
-                'x-public' => $this->publicKey
+                'x-public' => $this->getUserDetail()
             ]
-        )->get($this->getDomain(\Auth::user()) . $this->versionUri . $parameter . $query);
+        )->get($this->getUserDetail('domain') . $this->versionUri . $parameter . $query);
     }
 
-    private function getDomain(Authenticatable $user)
+
+    private function getUserDetail($key = 'public_key')
     {
-        return $user->company->domain;
+        return Auth::user()->company->$key;
     }
 
 }

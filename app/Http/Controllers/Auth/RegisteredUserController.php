@@ -40,7 +40,7 @@ class RegisteredUserController extends Controller
             [
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|confirmed|min:8',
+                'password' => 'required|string|confirmed|min:6',
                 'company_name' => 'required|string|max:255',
                 'company_domain' => 'required|string|max:255',
             ]
@@ -56,7 +56,7 @@ class RegisteredUserController extends Controller
             $companyId = Company::create(
                 [
                     'name' => $request->company_name,
-                    'domain' => $request->company_domain,
+                    'domain' => rtrim($request->company_domain,'/'),
                     'public_key' => null,
                     'private_key' => null
                 ]

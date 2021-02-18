@@ -4271,7 +4271,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     changeCategory: function changeCategory() {
-      console.log(this.value);
       this.$emit('input', this.value);
     },
     normalizer: function normalizer(node) {
@@ -4282,9 +4281,7 @@ __webpack_require__.r(__webpack_exports__);
       };
     }
   },
-  mounted: function mounted() {
-    console.log(this.options);
-  }
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -4345,6 +4342,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -4353,11 +4366,16 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       checked: [],
+      checkedConnect: [],
       value: null,
+      valueConnect: null,
       options: [],
       inputName: null,
       category: null,
       products: {
+        items: []
+      },
+      productsToConnect: {
         items: []
       }
     };
@@ -4366,9 +4384,14 @@ __webpack_require__.r(__webpack_exports__);
     getProducts: function getProducts(category) {
       var _this = this;
 
+      var productChoice = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'products';
       axios.get('/categories/' + category + '/products').then(function (response) {
-        _this.products = response.data;
-        console.log(_this.products);
+        if (productChoice === 'products') {
+          _this.products = response.data;
+          _this.checked = [];
+        } else if (productChoice === 'productsToConnect') {
+          _this.productsToConnect = response.data;
+        }
       });
     }
   },
@@ -4377,6 +4400,11 @@ __webpack_require__.r(__webpack_exports__);
       if (this.checked.includes(this.value) && this.checked.length > 1) {
         this.checked = [this.value];
       }
+    },
+    checkedConnect: function checkedConnect() {
+      if (this.checkedConnect.includes(this.valueConnect) && this.checkedConnect.length > 1) {
+        this.checkedConnect = [this.valueConnect];
+      }
     }
   },
   mounted: function mounted() {
@@ -4384,7 +4412,6 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('/categories/tree').then(function (response) {
       _this2.options = response.data.root_categories;
-      console.log(response.data);
     });
   },
   computed: {}
@@ -5981,186 +6008,380 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-        _c("div", { staticClass: "panel panel-default" }, [
-          _c(
-            "div",
-            { staticClass: "panel-body" },
-            [
-              _c("SelectTree", {
-                attrs: { options: _vm.options },
-                on: {
-                  input: function($event) {
-                    return _vm.getProducts(_vm.value)
-                  }
+      _c("div", { staticClass: "panel panel-default" }, [
+        _c(
+          "h2",
+          {
+            staticClass:
+              "inline-block text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate"
+          },
+          [
+            _vm._v(
+              "\n                        Product configurator\n                    "
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _vm.value &&
+        _vm.products.items[0] &&
+        _vm.checked.length &&
+        _vm.inputName &&
+        _vm.valueConnect &&
+        _vm.productsToConnect.items[0] &&
+        _vm.checkedConnect.length
+          ? _c("p", { staticClass: "inline-block float-right" }, [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
                 },
-                model: {
-                  value: _vm.value,
-                  callback: function($$v) {
-                    _vm.value = $$v
+                [_vm._v("\n                        Opslaan")]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass:
+              "panel-body grid xs:grid-cols-1 sm:grid-cols-3 gap-8 mt-3"
+          },
+          [
+            _c(
+              "div",
+              [
+                _c("SelectTree", {
+                  attrs: { options: _vm.options },
+                  on: {
+                    input: function($event) {
+                      return _vm.getProducts(_vm.value)
+                    }
                   },
-                  expression: "value"
-                }
-              }),
-              _vm._v(" "),
-              _vm.products.items[0]
-                ? _c(
-                    "ul",
-                    { staticClass: "mb-4 pl-3" },
-                    [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.checked,
-                            expression: "checked"
-                          }
-                        ],
-                        attrs: {
-                          type: "checkbox",
-                          name: "product[]",
-                          id: _vm.value
-                        },
-                        domProps: {
-                          value: _vm.value,
-                          checked: Array.isArray(_vm.checked)
-                            ? _vm._i(_vm.checked, _vm.value) > -1
-                            : _vm.checked
-                        },
-                        on: {
-                          change: function($event) {
-                            var $$a = _vm.checked,
-                              $$el = $event.target,
-                              $$c = $$el.checked ? true : false
-                            if (Array.isArray($$a)) {
-                              var $$v = _vm.value,
-                                $$i = _vm._i($$a, $$v)
-                              if ($$el.checked) {
-                                $$i < 0 && (_vm.checked = $$a.concat([$$v]))
+                  model: {
+                    value: _vm.value,
+                    callback: function($$v) {
+                      _vm.value = $$v
+                    },
+                    expression: "value"
+                  }
+                }),
+                _vm._v(" "),
+                _vm.products.items[0]
+                  ? _c(
+                      "ul",
+                      { staticClass: "mb-4 pl-3" },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.checked,
+                              expression: "checked"
+                            }
+                          ],
+                          attrs: {
+                            type: "checkbox",
+                            name: "product[]",
+                            id: _vm.value
+                          },
+                          domProps: {
+                            value: _vm.value,
+                            checked: Array.isArray(_vm.checked)
+                              ? _vm._i(_vm.checked, _vm.value) > -1
+                              : _vm.checked
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.checked,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = _vm.value,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 && (_vm.checked = $$a.concat([$$v]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.checked = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
                               } else {
-                                $$i > -1 &&
-                                  (_vm.checked = $$a
-                                    .slice(0, $$i)
-                                    .concat($$a.slice($$i + 1)))
+                                _vm.checked = $$c
                               }
-                            } else {
-                              _vm.checked = $$c
                             }
                           }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("label", { attrs: { for: "9999" } }, [
-                        _vm._v("Alle producten in deze categorie.")
-                      ]),
-                      _vm._v(" "),
-                      _vm._l(_vm.products.items, function(product) {
-                        return _c("li", [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.checked,
-                                expression: "checked"
-                              }
-                            ],
-                            attrs: {
-                              disabled: _vm.checked.includes(_vm.value),
-                              name: "checkboxes",
-                              type: "checkbox",
-                              id: product.id
-                            },
-                            domProps: {
-                              value: product.id,
-                              checked: Array.isArray(_vm.checked)
-                                ? _vm._i(_vm.checked, product.id) > -1
-                                : _vm.checked
-                            },
-                            on: {
-                              change: function($event) {
-                                var $$a = _vm.checked,
-                                  $$el = $event.target,
-                                  $$c = $$el.checked ? true : false
-                                if (Array.isArray($$a)) {
-                                  var $$v = product.id,
-                                    $$i = _vm._i($$a, $$v)
-                                  if ($$el.checked) {
-                                    $$i < 0 && (_vm.checked = $$a.concat([$$v]))
+                        }),
+                        _vm._v(" "),
+                        _c("label", { attrs: { for: "9999" } }, [
+                          _vm._v("Alle producten in deze categorie.")
+                        ]),
+                        _vm._v(" "),
+                        _vm._l(_vm.products.items, function(product) {
+                          return _c("li", [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.checked,
+                                  expression: "checked"
+                                }
+                              ],
+                              attrs: {
+                                disabled: _vm.checked.includes(_vm.value),
+                                name: "checkboxes",
+                                type: "checkbox",
+                                id: product.id
+                              },
+                              domProps: {
+                                value: product.id,
+                                checked: Array.isArray(_vm.checked)
+                                  ? _vm._i(_vm.checked, product.id) > -1
+                                  : _vm.checked
+                              },
+                              on: {
+                                change: function($event) {
+                                  var $$a = _vm.checked,
+                                    $$el = $event.target,
+                                    $$c = $$el.checked ? true : false
+                                  if (Array.isArray($$a)) {
+                                    var $$v = product.id,
+                                      $$i = _vm._i($$a, $$v)
+                                    if ($$el.checked) {
+                                      $$i < 0 &&
+                                        (_vm.checked = $$a.concat([$$v]))
+                                    } else {
+                                      $$i > -1 &&
+                                        (_vm.checked = $$a
+                                          .slice(0, $$i)
+                                          .concat($$a.slice($$i + 1)))
+                                    }
                                   } else {
-                                    $$i > -1 &&
-                                      (_vm.checked = $$a
-                                        .slice(0, $$i)
-                                        .concat($$a.slice($$i + 1)))
+                                    _vm.checked = $$c
                                   }
-                                } else {
-                                  _vm.checked = $$c
                                 }
                               }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("label", { attrs: { for: product.id } }, [
-                            _vm._v(_vm._s(product.name))
+                            }),
+                            _vm._v(" "),
+                            _c("label", { attrs: { for: product.id } }, [
+                              _vm._v(
+                                _vm._s(product.name) +
+                                  "  - €" +
+                                  _vm._s(product.price)
+                              )
+                            ])
                           ])
-                        ])
-                      })
-                    ],
-                    2
-                  )
-                : _c("p", { staticClass: "mb-4 pl-3 text-gray-500" }, [
-                    _vm._v(
-                      "Geen producten gevonden in de geselecteerde\n                        categorie."
+                        })
+                      ],
+                      2
                     )
-                  ]),
-              _vm._v(" "),
-              _vm.value && _vm.products.items[0] && _vm.checked.length
-                ? _c("div", { staticClass: "mt-3" }, [
-                    _c("label", [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.inputName,
-                            expression: "inputName"
-                          }
-                        ],
-                        staticClass:
-                          "w-full hover:border hover:border-blue-600",
-                        attrs: {
-                          type: "text",
-                          placeholder:
-                            "Naam van koppeling, 'Eindverbinding linkerkant' bijvoorbeeld",
-                          required: ""
-                        },
-                        domProps: { value: _vm.inputName },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.inputName = $event.target.value
-                          }
-                        }
-                      })
+                  : _c("p", { staticClass: "mb-4 pl-3 text-gray-500" }, [
+                      _vm._v(
+                        "Geen producten gevonden in de geselecteerde\n                                categorie."
+                      )
                     ])
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _vm.value && _vm.products.items[0] && _vm.checked.length
+              ? _c("div", [
+                  _c("label", [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.inputName,
+                          expression: "inputName"
+                        }
+                      ],
+                      staticClass:
+                        "rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block w-full",
+                      attrs: {
+                        type: "text",
+                        placeholder:
+                          "Naam van koppeling, 'Eindverbinding linkerkant' bijvoorbeeld",
+                        required: ""
+                      },
+                      domProps: { value: _vm.inputName },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.inputName = $event.target.value
+                        }
+                      }
+                    })
                   ])
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.inputName
-                ? _c(
-                    "div",
-                    { staticClass: "mt-3" },
-                    [_c("SelectTree", { attrs: { options: _vm.options } })],
-                    1
-                  )
-                : _vm._e()
-            ],
-            1
-          )
-        ])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.value &&
+            _vm.products.items[0] &&
+            _vm.checked.length &&
+            _vm.inputName
+              ? _c(
+                  "div",
+                  [
+                    _c("SelectTree", {
+                      attrs: { options: _vm.options },
+                      on: {
+                        input: function($event) {
+                          return _vm.getProducts(
+                            _vm.valueConnect,
+                            "productsToConnect"
+                          )
+                        }
+                      },
+                      model: {
+                        value: _vm.valueConnect,
+                        callback: function($$v) {
+                          _vm.valueConnect = $$v
+                        },
+                        expression: "valueConnect"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.productsToConnect.items[0]
+                      ? _c(
+                          "ul",
+                          { staticClass: "mb-4 pl-3" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.checkedConnect,
+                                  expression: "checkedConnect"
+                                }
+                              ],
+                              attrs: {
+                                type: "checkbox",
+                                name: "product[]",
+                                id: _vm.valueConnect
+                              },
+                              domProps: {
+                                value: _vm.valueConnect,
+                                checked: Array.isArray(_vm.checkedConnect)
+                                  ? _vm._i(
+                                      _vm.checkedConnect,
+                                      _vm.valueConnect
+                                    ) > -1
+                                  : _vm.checkedConnect
+                              },
+                              on: {
+                                change: function($event) {
+                                  var $$a = _vm.checkedConnect,
+                                    $$el = $event.target,
+                                    $$c = $$el.checked ? true : false
+                                  if (Array.isArray($$a)) {
+                                    var $$v = _vm.valueConnect,
+                                      $$i = _vm._i($$a, $$v)
+                                    if ($$el.checked) {
+                                      $$i < 0 &&
+                                        (_vm.checkedConnect = $$a.concat([$$v]))
+                                    } else {
+                                      $$i > -1 &&
+                                        (_vm.checkedConnect = $$a
+                                          .slice(0, $$i)
+                                          .concat($$a.slice($$i + 1)))
+                                    }
+                                  } else {
+                                    _vm.checkedConnect = $$c
+                                  }
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("label", { attrs: { for: "con-9999" } }, [
+                              _vm._v("Alle producten in deze categorie.")
+                            ]),
+                            _vm._v(" "),
+                            _vm._l(_vm.productsToConnect.items, function(
+                              product
+                            ) {
+                              return _c("li", [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.checkedConnect,
+                                      expression: "checkedConnect"
+                                    }
+                                  ],
+                                  attrs: {
+                                    disabled: _vm.checkedConnect.includes(
+                                      _vm.valueConnect
+                                    ),
+                                    name: "checkboxes",
+                                    type: "checkbox",
+                                    id: "con-" + product.id
+                                  },
+                                  domProps: {
+                                    value: "con-" + product.id,
+                                    checked: Array.isArray(_vm.checkedConnect)
+                                      ? _vm._i(
+                                          _vm.checkedConnect,
+                                          "con-" + product.id
+                                        ) > -1
+                                      : _vm.checkedConnect
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$a = _vm.checkedConnect,
+                                        $$el = $event.target,
+                                        $$c = $$el.checked ? true : false
+                                      if (Array.isArray($$a)) {
+                                        var $$v = "con-" + product.id,
+                                          $$i = _vm._i($$a, $$v)
+                                        if ($$el.checked) {
+                                          $$i < 0 &&
+                                            (_vm.checkedConnect = $$a.concat([
+                                              $$v
+                                            ]))
+                                        } else {
+                                          $$i > -1 &&
+                                            (_vm.checkedConnect = $$a
+                                              .slice(0, $$i)
+                                              .concat($$a.slice($$i + 1)))
+                                        }
+                                      } else {
+                                        _vm.checkedConnect = $$c
+                                      }
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "label",
+                                  { attrs: { for: "con-" + product.id } },
+                                  [
+                                    _vm._v(
+                                      _vm._s(product.name) +
+                                        " - €" +
+                                        _vm._s(product.price)
+                                    )
+                                  ]
+                                )
+                              ])
+                            })
+                          ],
+                          2
+                        )
+                      : _vm._e()
+                  ],
+                  1
+                )
+              : _vm._e()
+          ]
+        )
       ])
     ])
   ])
