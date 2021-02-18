@@ -3,19 +3,23 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view.
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function create()
     {
@@ -25,24 +29,50 @@ class RegisteredUserController extends Controller
     /**
      * Handle an incoming registration request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Request $request
+     * @return RedirectResponse
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|confirmed|min:8',
-        ]);
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|confirmed|min:8',
+                'company_name' => 'required|string|max:255',
+                'company_domain' => 'required|string|max:255',
+            ]
+        );
 
-        Auth::login($user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]));
+        $companyId = Company::where(
+            [
+                'name' => $request->company_name
+            ]
+        )->first();
+
+        if (!$companyId) {
+            $companyId = Company::create(
+                [
+                    'name' => $request->company_name,
+                    'domain' => $request->company_domain,
+                    'public_key' => null,
+                    'private_key' => null
+                ]
+            );
+        }
+
+        Auth::login(
+            $user = User::create(
+                [
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'company_id' => $companyId->id,
+                    'password' => Hash::make($request->password),
+                ]
+            )
+        );
 
         event(new Registered($user));
 

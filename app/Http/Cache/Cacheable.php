@@ -20,7 +20,6 @@ class Cacheable implements CacheInterface
     {
         if(!Cache::get($this->user . $key)){
             Cache::add($this->user . $key, $data, 3600);
-            print('No cache');
         }
         return Cache::get($this->user . $key);
     }

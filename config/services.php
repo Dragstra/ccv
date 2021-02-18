@@ -31,9 +31,12 @@ return [
     ],
 
     'ccvshop' => [
-        'public_key' => env('CCV_PUBLIC_KEY'),
-        'secret_key' => env('CCV_SECRET_KEY'),
         'versionUri' => env('CCV_VERSION_URI'),
-    ]
+    ],
+
+    'openkvk' => [
+        'key' => env('OPENKVK_KEY'),
+        'domain' => env('OPENKVK_DOMAIN'),
+    ],
 
 ];
