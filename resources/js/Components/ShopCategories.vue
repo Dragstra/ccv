@@ -1,108 +1,150 @@
 <template>
     <div class="container">
+    <FlashMessage></FlashMessage>
         <div class="row">
-                <div class="panel panel-default">
-                    <h2 class="inline-block text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
-                        Product configurator
-                    </h2>
-                    <p class="inline-block float-right" v-if="value && products.items[0] && checked.length && inputName && valueConnect && productsToConnect.items[0] && checkedConnect.length">
-<!--                        <label for="price"></label>-->
-<!--                        <input type="number" step="0.01" id="price" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">-->
-                        <button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-                        Opslaan</button></p>
-                    <div class="panel-body grid xs:grid-cols-1 sm:grid-cols-3 gap-8 mt-3">
-                        <div>
-                            <SelectTree :options="options" v-model="value" @input="getProducts(value)" />
+            <div class="panel panel-default">
+                <h2 class="inline-block text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate text-indigo-500">
+                    Product configurator
+                </h2>
+                <p v-if="BaseCategory && products.items[0] && checked.length && link && CategoryToConnect && productsToConnect.items[0] && checkedConnect.length"
+                   class="inline-block float-right">
+                    <button
+                        class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                        Opslaan
+                    </button>
+                </p>
+                <div class="panel-body grid xs:grid-cols-1 sm:grid-cols-3 gap-8 mt-3">
+                    <div>
+                        <label v-if="checked.length < 1">Kies een categorie voor het basisproduct
+                            <SelectTree v-model="BaseCategory" :options="options" @input="getProducts(BaseCategory)"/>
+                        </label>
 
-                            <ul class="mb-4 pl-3" v-if="products.items[0]">
-                                <input v-model="checked" type="checkbox" name="product[]" :id="value" :value="value">
-                                <label for="9999">Alle producten in deze categorie.</label>
-                                <li v-for="product in products.items">
-                                    <input :disabled="checked.includes(value)"
-                                           name="checkboxes" v-model="checked" type="checkbox" :value="product.id"
-                                           :id="product.id">
-                                    <label :for="product.id">{{ product.name }}  - €{{ product.price }}</label>
-                                </li>
-                            </ul>
+                        <ul v-if="products.items[0]" class="mb-4 pl-3">
+                            <input id="all" v-model="checked" name="product[]" type="checkbox"
+                                   value="9999" @change="allCheck=!allCheck">
+                            <label for="all">Alle producten in deze categorie.</label>
+                            <li v-for="product in products.items">
+                                <input :id="product.id"
+                                       v-model="checked" :disabled="allCheck" :value="product.id" name="checkboxes"
+                                       type="checkbox">
+                                <label :for="product.id">{{ product.name }} - €{{ product.price }}</label>
+                            </li>
+                        </ul>
 
-                            <p class="mb-4 pl-3 text-gray-500" v-else>Geen producten gevonden in de geselecteerde
-                                categorie.</p>
-                        </div>
+                        <p v-else class="mb-4 pl-3 text-gray-500">Geen producten gevonden in de geselecteerde
+                            categorie.</p>
+                    </div>
 
-                        <div v-if="value && products.items[0] && checked.length">
-                            <label>
-                                <input type="text" class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block w-full"
-                                       v-model="inputName"
-                                       placeholder="Naam van koppeling, 'Eindverbinding linkerkant' bijvoorbeeld"
-                                       required>
-                            </label>
-                        </div>
+                    <div v-if="BaseCategory && products.items[0] && checked.length">
+                        <label>Link
+                            <LinkTree v-model="link" @input="setLinkId(link)"/>
+                        </label>
+                        <hr class="mb-4">
+                        <label v-if="link" class="mb-4">Klant kan lengte bepalen
+                            <input v-model="length"
+                                   :checked="length"
+                                   class="mb-4 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block"
+                                   placeholder="Klant kan benodigde lengte aangeven"
+                                   required
+                                   type="checkbox">
+                        </label>
+                        <hr class="mb-4">
+                        <label v-if="link">Extra prijs <br>
+                            <input id="price"
+                                   class="inline-block rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                   step="0.1"
+                                   type="number"
+                                   value="10">
+                            <span v-if="percentage" @click="percentage=!percentage">% (percentage)</span> <span
+                                v-else @click="percentage=!percentage">€ (euro)</span>
+                        </label>
+                    </div>
 
-                        <div v-if="value && products.items[0] && checked.length && inputName">
-                            <SelectTree :options="options" v-model="valueConnect" @input="getProducts(valueConnect, 'productsToConnect')" >
+                    <div v-if="BaseCategory && products.items[0] && checked.length && link">
+                        <label v-if="checkedConnect < 1">Kies een categorie voor het aanvullende product
+                            <SelectTree v-model="CategoryToConnect" :options="options"
+                                        @input="getProducts(CategoryToConnect, 'productsToConnect')">
                             </SelectTree>
-
-                        <ul class="mb-4 pl-3" v-if="productsToConnect.items[0]">
-                            <input v-model="checkedConnect" type="checkbox" name="product[]" :id="valueConnect" :value="valueConnect">
-                            <label for="con-9999">Alle producten in deze categorie.</label>
+                        </label>
+                        <ul v-if="productsToConnect.items[0]" class="mb-4 pl-3">
+                            <input :id="CategoryToConnect" id="con-all" v-model="checkedConnect" name="product[]"
+                                   type="checkbox"
+                                   value="con-all" @change="allCheckConnected=!allCheckConnected">
+                            <label for="con-all">Alle producten in deze categorie.</label>
                             <li v-for="product in productsToConnect.items">
-                                <input :disabled="checkedConnect.includes(valueConnect)"
-                                       name="checkboxes" v-model="checkedConnect" type="checkbox" :value="'con-'+product.id"
-                                       :id="'con-'+product.id">
+                                <input :id="'con-'+product.id"
+                                       v-model="checkedConnect" :disabled="allCheckConnected" :value="'con-'+product.id"
+                                       name="checkboxes"
+                                       type="checkbox">
                                 <label :for="'con-'+product.id">{{ product.name }} - €{{ product.price }}</label>
                             </li>
-                        </ul></div>
+                        </ul>
+                        <p v-else class="mb-4 pl-3 text-gray-500">Geen producten gevonden in de geselecteerde
+                            categorie.</p>
                     </div>
                 </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import SelectTree from "./SelectTree";
+import LinkTree from "./LinkTree";
 
 export default {
-    components: {SelectTree},
+    components: {SelectTree, LinkTree},
 
     data() {
         return {
             checked: [],
             checkedConnect: [],
-            value: null,
-            valueConnect: null,
+            allCheckConnected: false,
+            allCheck: false,
+            BaseCategory: null,
+            CategoryToConnect: null,
             options: [],
-            inputName: null,
-            category: null,
+            link: null,
+            length: false,
+            percentage: false,
             products: {
                 items: []
             },
             productsToConnect: {
                 items: []
-            }
+            },
         }
     },
     methods: {
-        getProducts(category, productChoice =  'products') {
+        setLinkId(link) {
+          this.link = link
+        },
+        getProducts(category, productChoice = 'products') {
             axios.get('/categories/' + category + '/products')
                 .then(response => {
-                    if(productChoice === 'products'){
+                    if (productChoice === 'products') {
                         this.products = response.data
                         this.checked = []
-                    } else if(productChoice === 'productsToConnect') {
+                    } else if (productChoice === 'productsToConnect') {
                         this.productsToConnect = response.data
+                        this.checkedConnect = []
                     }
                 })
         },
     },
     watch: {
         checked: function () {
-            if (this.checked.includes(this.value) && this.checked.length > 1) {
-                this.checked = [this.value]
+            if (this.checked.includes("9999")) {
+                this.checked = this.products.items.map(function (value) {
+                    return value.id
+                })
             }
         },
         checkedConnect: function () {
-            if (this.checkedConnect.includes(this.valueConnect) && this.checkedConnect.length > 1) {
-                this.checkedConnect = [this.valueConnect]
+            if (this.checkedConnect.includes("con-all")) {
+                this.checkedConnect = this.productsToConnect.items.map(function (value) {
+                    return 'con-' + value.id
+                })
             }
         }
     },
@@ -111,6 +153,7 @@ export default {
             .then(response => {
                 this.options = response.data.root_categories
             })
+        // this.flashMessage.setStrategy('single');
     },
     computed: {}
 }

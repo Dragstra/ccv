@@ -18,6 +18,12 @@
                     <x-nav-link :href="route('configurator.index')" :active="request()->routeIs('configurator.index')">
                         {{ __('Configurator') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('home')">
+                        {{ __('Producten') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('home')">
+                        {{ __('Uploads') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -43,7 +49,7 @@
                     <x-slot name="content">
 
 
-                        <x-dropdown-link :href="route('home')">
+                        <x-dropdown-link :href="route('profile')">
                             {{ Auth::user()->name }}
                         </x-dropdown-link>
                         <!-- Authentication -->

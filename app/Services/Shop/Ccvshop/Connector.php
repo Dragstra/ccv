@@ -23,9 +23,8 @@ class Connector
 
     protected function get(string $parameter, ?string $query = null)
     {
-        $url = $this->versionUri . $parameter . $query;
+        $hash = $this->getHash($parameter, $query);
 
-        $hash = hash_hmac('sha512', $this->getUserDetail()."|GET|".$url."||".$this->timestamp , $this->getUserDetail('private_key'));
         return Http::withHeaders(
             [
                 'x-date' => $this->timestamp,
@@ -39,6 +38,11 @@ class Connector
     private function getUserDetail($key = 'public_key')
     {
         return Auth::user()->company->$key;
+    }
+
+    private function getHash(string $parameter, ?string $query = null){
+        $url = $this->versionUri . $parameter . $query;
+        return hash_hmac('sha512', $this->getUserDetail()."|GET|".$url."||".$this->timestamp , $this->getUserDetail('private_key'));
     }
 
 }

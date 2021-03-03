@@ -24,6 +24,7 @@
     },
     "dependencies": {
         "@riophae/vue-treeselect": "^0.4.0",
+        "@smartweb/vue-flash-message": "^0.6.10",
         "jquery": "^3.5.1",
         "jquery-json": "^2.6.0",
         "verto": "^0.1.1",

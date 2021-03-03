@@ -3,23 +3,44 @@
 namespace App\Http\Controllers\Configurator;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Store\ConfigurationValidator;
-use App\Models\Configuration;
+use App\Http\Requests\Store\LinkValidator;
+use App\Models\Link;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 
-class ConfiguratorController extends Controller
+class LinkController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
+     * @param Authenticatable $user
+     * @return array
      */
-    public function index()
+    public function index(Authenticatable $user)
     {
-        $company = \Auth::user()->company;
+        $data = Link::where('company_id', $user->company_id)->get();
 
-        return view('configurator', compact('company'));
+        $tree = function ($elements, $parentId = 0) use (&$tree) {
+            $branch = [];
+
+            foreach ($elements as $element) {
+                if ($element['children'] == $parentId) {
+                    $children = $tree($elements, $element['id']);
+                    if ($children) {
+                        $element['children'] = $children;
+                    }  else {
+                        $element['children'] = [];
+                    }
+                    $branch[] = $element;
+                }
+            }
+
+            return $branch;
+        };
+
+        $tree = $tree($data);
+        return $tree;
+
     }
 
     /**
@@ -35,14 +56,16 @@ class ConfiguratorController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param ConfigurationValidator $configuration
-     * @param Configuration $config
+     * @param LinkValidator $request
      * @param Authenticatable $user
      * @return void
      */
-    public function store(ConfigurationValidator $configuration, Configuration $config, Authenticatable $user)
+    public function store(LinkValidator $request, Authenticatable $user)
     {
-        //TODO store details
+        return Link::updateOrCreate(
+            ['company_id' => $user->company_id, 'name' => $request->name],
+            ['children' => $request->children]
+        );
     }
 
     /**
