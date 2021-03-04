@@ -13,7 +13,7 @@
                         <p class="mt-4 italic">
                             Er zijn momenteel <strong>{{ $configurators->count() }}</strong> producten geconfigureerd.
                         </p>
-                    <a href="{{ route('configurator.index') }}" class="underline italic text-indigo-500">Voeg nu een configuratie toe</a>
+                    <a href="{{ route('configurators.index') }}" class="underline italic text-indigo-500">Voeg nu een configuratie toe</a>
                 </div>
             </div>
         </div>

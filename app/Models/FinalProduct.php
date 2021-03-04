@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Configuration extends Model
+class FinalProduct extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function company()
+    public function link()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Link::class);
     }
 
 }

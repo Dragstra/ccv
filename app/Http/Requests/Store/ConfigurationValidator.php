@@ -24,7 +24,13 @@ class ConfigurationValidator extends FormRequest
     public function rules()
     {
         return [
-            //TODO setup validation
+            'products' => 'required',
+            'productsToConnect' => 'required',
+            'baseCategory' => 'required',
+            'link' => 'required|integer',
+            'percentage' => 'required|boolean',
+            'length' => 'required|boolean',
+            'price' => 'required'
         ];
     }
 }

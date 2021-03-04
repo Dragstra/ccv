@@ -57,6 +57,7 @@ export default {
                         title: 'Link toegevoegd.',
                         message: 'Je kunt nu de toegevoegde link gebruiken!',
                         time: 5000,
+                        icon: ''
                     });
                     this.getLinkData()
                     this.changeLink();

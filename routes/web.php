@@ -17,7 +17,7 @@ Route::middleware(['auth'])->group(
         Route::resource('products', ProductController::class)->only(['index', 'show']);
         Route::resource('categories', CategoryController::class)->only(['index', 'show']);
         Route::resource('links', LinkController::class);
-        Route::resource('configurator', ConfiguratorController::class);
+        Route::resource('configurators', ConfiguratorController::class);
         Route::get('profile', [UserController::class, 'profile'])->name('profile');
 
         Route::get('/dashboard', function () {

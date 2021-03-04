@@ -15,7 +15,7 @@
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('configurator.index')" :active="request()->routeIs('configurator.index')">
+                    <x-nav-link :href="route('configurators.index')" :active="request()->routeIs('configurators.index')">
                         {{ __('Configurator') }}
                     </x-nav-link>
                     <x-nav-link :href="route('home')">
@@ -88,7 +88,7 @@
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('configurator.index')" :active="request()->routeIs('configurator.index')">
+            <x-responsive-nav-link :href="route('configurators.index')" :active="request()->routeIs('configurators.index')">
                 {{ __('Configurator') }}
             </x-responsive-nav-link>
         </div>
