@@ -25,7 +25,7 @@ class LinkValidator extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'children' => 'integer|nullable'
+            'parent_id' => 'integer|nullable'
         ];
     }
 }

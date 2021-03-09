@@ -3,7 +3,7 @@
 
 namespace App\Services\Shop\Ccvshop;
 
-
+use Auth;
 use App\Http\Cache\Interfaces\CacheInterface;
 use App\Services\Shop\Interfaces\CategoryInterface;
 
@@ -43,7 +43,7 @@ class Categories extends Connector implements CategoryInterface
 
     public function getTree(): array
     {
-        return $this->cache->getOrSet('TreeCategories', $this->get('categorytree')->json());
+        return $this->cache->getOrSet('TreeCategories'. Auth::user()->id, $this->get('categorytree')->json());
     }
 
 

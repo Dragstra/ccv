@@ -17,7 +17,6 @@ class CreateConfigurationsTable extends Migration
             $table->id();
             $table->string('product_id');
             $table->string('category_id');
-            $table->foreignId('link_id')->constrained();
             $table->foreignId('company_id')->constrained();
             $table->integer('order');
             $table->boolean('length');

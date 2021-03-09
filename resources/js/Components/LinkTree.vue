@@ -44,14 +44,14 @@ export default {
             return {
                 id: node.id,
                 label: node.name,
-                children: node.children,
+                parent_id: node.parent_id,
             }
         },
         postLink() {
             if(this.name !== null) {
                 axios.post('/links', {
                     name: this.name,
-                    children: this.value
+                    parent_id: this.value
                 }).then(r => {
                     this.flashMessage.success({
                         title: 'Link toegevoegd.',

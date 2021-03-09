@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLinksTable extends Migration
+class AddCategoryToCompaniesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreateLinksTable extends Migration
      */
     public function up()
     {
-        Schema::create('links', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->integer('parent_id')->nullable();
-            $table->foreignId('company_id')->constrained();
-            $table->timestamps();
+        Schema::table('companies', function (Blueprint $table) {
+            $table->string('category')->nullable();
         });
     }
 
@@ -29,6 +25,8 @@ class CreateLinksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('links');
+        Schema::table('companies', function (Blueprint $table) {
+            //
+        });
     }
 }

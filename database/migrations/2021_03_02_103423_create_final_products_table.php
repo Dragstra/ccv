@@ -15,7 +15,6 @@ class CreateFinalProductsTable extends Migration
     {
         Schema::create('final_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('link_id')->constrained();
             $table->string('product_id')->nullable();
             $table->integer('order');
             $table->integer('price');

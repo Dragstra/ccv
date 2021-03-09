@@ -19,6 +19,7 @@ Route::middleware(['auth'])->group(
         Route::resource('links', LinkController::class);
         Route::resource('configurators', ConfiguratorController::class);
         Route::get('profile', [UserController::class, 'profile'])->name('profile');
+        Route::put('profile', [UserController::class, 'saveProfile'])->name('saveProfile');
 
         Route::get('/dashboard', function () {
                 $configurators = Configuration::all();

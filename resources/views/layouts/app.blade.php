@@ -33,5 +33,14 @@
                 {{ $slot }}
             </main>
         </div>
+        @auth
+        <script type="text/javascript">
+            const ORDER_JSON    = 'null';
+            const PRODUCT_JSON  = 'null';
+            const CATEGORY_JSON = 'null';
+            const USER_JSON     = 'null';
+        </script>
+        <script type="text/javascript" src="{{ \Auth::user()->company->domain }}/website/JavaScript/Vertoshop.js">
+        @endauth
     </body>
 </html>

@@ -184,11 +184,6 @@ export default {
     },
     mounted() {
         this.flashMessage.setStrategy('multiple');
-        axios.get('/categories/tree')
-            .then(response => {
-                this.options = response.data.root_categories
-            })
-        // this.flashMessage.setStrategy('single');
     },
     computed: {}
 }

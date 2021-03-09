@@ -13,7 +13,7 @@ class Link extends Model
     protected $fillable = [
         'company_id',
         'name',
-        'children'
+        'parent_id'
     ];
 
     public function toTree()

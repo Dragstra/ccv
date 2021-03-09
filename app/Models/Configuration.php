@@ -16,4 +16,9 @@ class Configuration extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function getConfiguredLinks()
+    {
+        return $this->hasMany(ConfiguredLink::class);
+    }
+
 }

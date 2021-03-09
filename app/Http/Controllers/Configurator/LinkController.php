@@ -24,7 +24,7 @@ class LinkController extends Controller
             $branch = [];
 
             foreach ($elements as $element) {
-                if ($element['children'] == $parentId) {
+                if ($element['parent_id'] == $parentId) {
                     $children = $tree($elements, $element['id']);
                     if ($children) {
                         $element['children'] = $children;
@@ -64,7 +64,7 @@ class LinkController extends Controller
     {
         return Link::updateOrCreate(
             ['company_id' => $user->company_id, 'name' => $request->name],
-            ['children' => $request->children]
+            ['parent_id' => $request->parent_id]
         );
     }
 

@@ -41,8 +41,8 @@ class Connector
     }
 
     private function getHash(string $parameter, ?string $query = null){
-        $url = $this->versionUri . $parameter . $query;
-        return hash_hmac('sha512', $this->getUserDetail()."|GET|".$url."||".$this->timestamp , $this->getUserDetail('private_key'));
+        $uri = $this->versionUri . $parameter . $query;
+        return hash_hmac('sha512', $this->getUserDetail()."|GET|".$uri."|".null."|".$this->timestamp, $this->getUserDetail('private_key'));
     }
 
 }
