@@ -22,5 +22,10 @@ class Products extends Connector implements ProductInterface
     }
 
 
+    public function createProduct(array $data)
+    {
+        $parameter = 'product';
 
+        return $this->post($parameter, $data);
+    }
 }

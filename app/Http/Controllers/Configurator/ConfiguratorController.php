@@ -42,7 +42,7 @@ class ConfiguratorController extends Controller
      */
     public function store(ConfigurationValidator $configuration)
     {
-        event(new ConfiguredEvent((array)$configuration));
+        ConfiguredEvent::dispatch((array)$configuration->all(), \Auth::user()->company_id);
 
         return \response(['message' => 'Configuratie is succesvol opgeslagen.'], 200);
     }

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\ConfiguredLink;
+use App\Models\Configuration;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ConfiguredLinksFactory extends Factory
@@ -12,7 +12,7 @@ class ConfiguredLinksFactory extends Factory
      *
      * @var string
      */
-    protected $model = ConfiguredLink::class;
+    protected $model = Configuration::class;
 
     /**
      * Define the model's default state.

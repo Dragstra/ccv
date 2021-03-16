@@ -20,13 +20,14 @@ Route::middleware(['auth'])->group(
         Route::resource('configurators', ConfiguratorController::class);
         Route::get('profile', [UserController::class, 'profile'])->name('profile');
         Route::put('profile', [UserController::class, 'saveProfile'])->name('saveProfile');
+        Route::get('products', [ProductController::class, 'index']);
 
         Route::get('/dashboard', function () {
-                $configurators = Configuration::all();
+                $configurators = Configuration::all()->count();
                 return view('dashboard', compact('configurators'));
             })->name('home');
         Route::get('/', function () {
-                $configurators = Configuration::all();
+                $configurators = Configuration::all()->count();
                 return view('dashboard', compact('configurators'));
             });
 

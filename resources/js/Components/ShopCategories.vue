@@ -6,6 +6,7 @@
                 <h2 class="inline-block text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate text-indigo-500">
                     Product configurator
                 </h2>
+                <transition name="fade">
                 <p v-if="baseCategory && products.items[0] && checked.length && link && categoryToConnect && productsToConnect.items[0] && checkedConnect.length"
                    class="inline-block float-right">
                     <button @click="saveConfiguration"
@@ -13,6 +14,7 @@
                         Opslaan
                     </button>
                 </p>
+                </transition>
                 <div class="panel-body grid xs:grid-cols-1 sm:grid-cols-3 gap-8 mt-3">
                     <div>
                         <label v-if="checked.length < 1">Kies een categorie voor het basisproduct
@@ -35,53 +37,78 @@
                             categorie.</p>
                     </div>
 
-                    <div v-if="baseCategory && products.items[0] && checked.length">
-                        <label>Link
-                            <LinkTree v-model="link" @input="setLinkId(link)"/>
-                        </label>
-                        <hr class="mb-4">
-                        <label v-if="link" class="mb-4">Klant kan lengte bepalen
-                            <input v-model="length"
-                                   :checked="length"
-                                   class="mb-4 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block"
-                                   placeholder="Klant kan benodigde lengte aangeven"
-                                   required
-                                   type="checkbox">
-                        </label>
-                        <hr class="mb-4">
-                        <label v-if="link">Extra prijs <br>
-                            <input id="price"
-                                   class="inline-block rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                   step="0.1"
-                                   type="number"
-                                   v-model="price">
-                            <span v-if="percentage" @click="percentage=!percentage">% (percentage)</span> <span
-                                v-else @click="percentage=!percentage">€ (euro)</span>
-                        </label>
-                    </div>
-
-                    <div v-if="baseCategory && products.items[0] && checked.length && link">
-                        <label v-if="checkedConnect < 1">Kies een categorie voor het aanvullende product
-                            <SelectTree v-model="categoryToConnect" :options="options"
-                                        @input="getProducts(categoryToConnect, 'productsToConnect')">
-                            </SelectTree>
-                        </label>
-                        <ul v-if="productsToConnect.items[0]" class="mb-4 pl-3">
-                            <input :id="categoryToConnect" id="con-all" v-model="checkedConnect" name="product[]"
-                                   type="checkbox"
-                                   value="con-all" @change="allCheckConnected=!allCheckConnected">
-                            <label for="con-all">Alle producten in deze categorie.</label>
-                            <li v-for="product in productsToConnect.items">
-                                <input :id="'con-'+product.id"
-                                       v-model="checkedConnect" :disabled="allCheckConnected" :value="'con-'+product.id"
-                                       name="checkboxes"
+                    <transition name="fade">
+                        <div v-if="baseCategory && products.items[0] && checked.length">
+                            <label>Link
+                                <LinkTree v-model="link" @input="setLinkId(link)"/>
+                            </label>
+                            <hr v-if="link" class="mb-4">
+                            <label v-if="link" class="mb-4">Klant kan lengte bepalen
+                                <input v-model="length"
+                                       :checked="length"
+                                       class="mb-4 shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 block"
+                                       placeholder="Klant kan benodigde lengte aangeven"
+                                       required
                                        type="checkbox">
-                                <label :for="'con-'+product.id">{{ product.name }} - €{{ product.price }}</label>
-                            </li>
-                        </ul>
-                        <p v-else class="mb-4 pl-3 text-gray-500">Geen producten gevonden in de geselecteerde
-                            categorie.</p>
-                    </div>
+                            </label>
+                            <hr v-if="link" class="mb-4">
+                            <label v-if="link">Extra prijs <br>
+                                <input id="price"
+                                       class="inline-block shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                       step="0.1"
+                                       type="number"
+                                       v-model="price">
+                                <span v-if="percentage" @click="percentage=!percentage">% (percentage)</span> <span
+                                    v-else @click="percentage=!percentage">€ (euro)</span>
+                            </label>
+                            <hr v-if="link" class="mb-4">
+                            <label v-if="link">Order (links bijv. -99) <br>
+                                <input id="order"
+                                       class="inline-block shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                       step="1"
+                                       type="number"
+                                       v-model="order">
+                            </label>
+                            <hr v-if="link" class="mb-4">
+                            <label v-if="link">Maten (komen onder de tekening) <br>
+                                L: <input id="productLength"
+                                       class="w-1/4 inline-block shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                       step="0.1"
+                                       type="number"
+                                       v-model="productLength">
+                                B: <input id="productWidth"
+                                       class="w-1/4 inline-block shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                       step="0.1"
+                                       type="number"
+                                       v-model="productWidth">
+                            </label>
+                        </div>
+                    </transition>
+
+                    <transition name="fade">
+                        <div v-if="baseCategory && products.items[0] && checked.length && link">
+                            <label v-if="checkedConnect < 1">Kies een categorie voor het aanvullende product
+                                <SelectTree v-model="categoryToConnect" :options="options"
+                                            @input="getProducts(categoryToConnect, 'productsToConnect')">
+                                </SelectTree>
+                            </label>
+                            <ul v-if="productsToConnect.items[0]" class="mb-4 pl-3">
+                                <input :id="categoryToConnect" id="con-all" v-model="checkedConnect" name="product[]"
+                                       type="checkbox"
+                                       value="con-all" @change="allCheckConnected=!allCheckConnected">
+                                <label for="con-all">Alle producten in deze categorie.</label>
+                                <li v-for="product in productsToConnect.items">
+                                    <input :id="'con-'+product.id"
+                                           v-model="checkedConnect" :disabled="allCheckConnected" :value="'con-'+product.id"
+                                           name="checkboxes"
+                                           type="checkbox">
+                                    <label :for="'con-'+product.id">{{ product.name }} - €{{ product.price }}</label>
+                                </li>
+                            </ul>
+                            <p v-else class="mb-4 pl-3 text-gray-500">Geen producten gevonden in de geselecteerde
+                                categorie.</p>
+                        </div>
+                    </transition>
                 </div>
             </div>
         </div>
@@ -105,8 +132,11 @@ export default {
             categoryToConnect: null,
             options: [],
             link: null,
+            order: 0,
             length: false,
             price: 10,
+            productLength: 0,
+            productWidth: 0,
             percentage: false,
             products: {
                 items: []
@@ -139,8 +169,11 @@ export default {
                     productsToConnect: this.checkedConnect,
                     baseCategory: this.baseCategory,
                     link: this.link,
+                    productLength: this.productLength,
+                    productWidth: this.productWidth,
                     percentage: this.percentage,
                     length: this.length,
+                    order: this.order,
                     price: this.price
                 }).then(r => {
                     this.flashMessage.success({
@@ -190,5 +223,10 @@ export default {
 </script>
 
 <style scoped>
-
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
 </style>

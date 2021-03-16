@@ -22,7 +22,10 @@ class LinkFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => $this->faker->word,
+            'parent_id' => $this->faker->boolean(50) ? null : rand(1, 3),
+            'company_id' => 1
         ];
+
     }
 }

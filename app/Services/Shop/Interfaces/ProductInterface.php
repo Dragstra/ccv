@@ -11,4 +11,6 @@ interface ProductInterface
 
     public function getProduct(int $product);
 
+    public function createProduct(Array $data);
+
 }

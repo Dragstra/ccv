@@ -11,7 +11,7 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                         <h1 class="text-3xl">Welkom {{ \Auth::user()->name }},</h1>
                         <p class="mt-4 italic">
-                            Er zijn momenteel <strong>{{ $configurators->count() }}</strong> producten geconfigureerd.
+                            Er zijn momenteel <strong>{{ $configurators }}</strong> producten geconfigureerd.
                         </p>
                     <a href="{{ route('configurators.index') }}" class="underline italic text-indigo-500">Voeg nu een configuratie toe</a>
                 </div>

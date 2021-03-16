@@ -14,7 +14,7 @@ class AddCompanyKeyToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('company_id')->constrained();
+            $table->foreignId('company_id');
         });
     }
 

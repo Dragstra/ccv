@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Configuration;
+use App\Models\BaseProduct;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ConfigurationFactory extends Factory
@@ -12,7 +12,7 @@ class ConfigurationFactory extends Factory
      *
      * @var string
      */
-    protected $model = Configuration::class;
+    protected $model = BaseProduct::class;
 
     /**
      * Define the model's default state.

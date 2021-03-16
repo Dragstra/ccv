@@ -27,7 +27,7 @@ class ProfileRequest extends FormRequest
             'name' => 'required|string',
             'email' => 'required|string|email',
             'domain' => 'required|string|url',
-            'category' => 'required'
+            'category' => 'required_if:private,public'
         ];
     }
 

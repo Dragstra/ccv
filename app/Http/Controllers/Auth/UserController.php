@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ProfileRequest;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Artisan;
 
 class UserController extends Controller
 {
@@ -23,6 +24,9 @@ class UserController extends Controller
         $user->company->private_key = $details->private;
         $user->update();
         $user->company->update();
+
+        Artisan::call('cache:clear');
+
         return redirect()->route('profile');
     }
 

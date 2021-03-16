@@ -29,7 +29,10 @@ class ConfigurationValidator extends FormRequest
             'baseCategory' => 'required',
             'link' => 'required|integer',
             'percentage' => 'required|boolean',
+            'productLength' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'productWidth' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'length' => 'required|boolean',
+            'order' => 'required|integer',
             'price' => 'required'
         ];
     }

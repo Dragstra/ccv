@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Link;
+use App\Models\Company;
 use Illuminate\Database\Seeder;
 
-class LinkSeeder extends Seeder
+class CompanySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,9 @@ class LinkSeeder extends Seeder
      */
     public function run()
     {
-        Link::factory()->count(50)->create();
+        Company::create(
+            [
+            ]
+        );
     }
 }

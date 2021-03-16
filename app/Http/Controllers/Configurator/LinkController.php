@@ -7,6 +7,7 @@ use App\Http\Requests\Store\LinkValidator;
 use App\Models\Link;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class LinkController extends Controller
 {
@@ -28,7 +29,7 @@ class LinkController extends Controller
                     $children = $tree($elements, $element['id']);
                     if ($children) {
                         $element['children'] = $children;
-                    }  else {
+                    } else {
                         $element['children'] = [];
                     }
                     $branch[] = $element;
@@ -40,13 +41,12 @@ class LinkController extends Controller
 
         $tree = $tree($data);
         return $tree;
-
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -62,17 +62,20 @@ class LinkController extends Controller
      */
     public function store(LinkValidator $request, Authenticatable $user)
     {
-        return Link::updateOrCreate(
-            ['company_id' => $user->company_id, 'name' => $request->name],
-            ['parent_id' => $request->parent_id]
+        return Link::create(
+            [
+                'name' => $request->name,
+                'company_id' => $user->company_id,
+                'parent_id' => $request->parent_id
+            ]
         );
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function show($id)
     {
@@ -82,8 +85,8 @@ class LinkController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function edit($id)
     {
@@ -93,9 +96,9 @@ class LinkController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -105,11 +108,12 @@ class LinkController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function destroy($id)
     {
-        //
+        $link = Link::findOrFail($id);
+        return $link->deleteIfNoChildren();
     }
 }

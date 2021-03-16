@@ -15,12 +15,12 @@ class CreateConfigurationsTable extends Migration
     {
         Schema::create('configurations', function (Blueprint $table) {
             $table->id();
-            $table->string('product_id');
-            $table->string('category_id');
-            $table->foreignId('company_id')->constrained();
-            $table->integer('order');
-            $table->boolean('length');
+            $table->foreignId('base_product_id')->nullable()->constrained();
+            $table->foreignId('extended_product_id')->nullable()->constrained();
+            $table->foreignId('links_id')->nullable()->constrained();
+            $table->softDeletes();
             $table->timestamps();
+            $table->unique(["base_product_id", "extended_product_id", "links_id"], 'final_configuration');
         });
     }
 
